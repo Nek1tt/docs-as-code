@@ -1,0 +1,10 @@
+site_name: Документация Никиты Абрамова
+
+theme:
+  name: readthedocs
+
+plugins:
+  - search
+
+nav:
+  - Главная: index.md
