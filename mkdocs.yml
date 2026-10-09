@@ -1,10 +1,7 @@
-site_name: Документация Никиты Абрамова
+site_name: Docs as Code
 
 theme:
   name: readthedocs
 
 plugins:
   - search
-
-nav:
-  - Главная: index.md
