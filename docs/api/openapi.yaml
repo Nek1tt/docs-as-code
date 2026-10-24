@@ -1,0 +1,88 @@
+openapi: 3.0.3
+
+info:
+  title: Spam Detection API
+  description: API для определения спама в текстовых сообщениях
+  version: 1.0.0
+
+servers:
+  - url: https://example.com/api/v1
+
+paths:
+  /classifications:
+    post:
+      summary: Проверить сообщение на спам
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                  example: Вы выиграли приз! Оплатите его получение.
+      responses:
+        '200':
+          description: Сообщение классифицировано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationResult'
+        '400':
+          description: Поле text отсутствует, имеет неверный тип или содержит пустой текст
+        '503':
+          description: ML-модель временно недоступна
+
+  /classifications/{id}:
+    get:
+      summary: Получить результат классификации
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 123
+      responses:
+        '200':
+          description: Результат найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationResult'
+        '404':
+          description: Результат с указанным идентификатором не найден
+
+  /labels:
+    get:
+      summary: Получить доступные классы сообщений
+      responses:
+        '200':
+          description: Список классов получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - spam
+                - ham
+        '500':
+          description: Внутренняя ошибка сервиса
+
+components:
+  schemas:
+    ClassificationResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 123
+        label:
+          type: string
+          description: spam — спам, ham — обычное сообщение
+          example: spam
